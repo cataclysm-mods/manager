@@ -1,11 +1,12 @@
 use hyper_tls::HttpsConnector;
-use hyper::Client;
 use hyper::client::HttpConnector;
 use hyper::Request;
 
-pub fn build_client() -> Client<HttpsConnector<HttpConnector>, hyper::Body> {
+pub type Client = hyper::Client<HttpsConnector<HttpConnector>, hyper::Body>;
+
+pub fn build_client() -> Client {
     let https = HttpsConnector::new();
-    let client = Client::builder()
+    let client = hyper::Client::builder()
         .build::<_, hyper::Body>(https);
 
     client

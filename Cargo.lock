@@ -19,6 +19,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.28"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d9a60d744a80c30fcb657dfe2c1b22bcb3e814c1a1e3674f32bf5820b570fbff"
+
+[[package]]
+name = "app_dirs2"
+version = "2.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "61b1fa4b1eeb18470c454bbed5406f02463aad37fd20f3a16c65bed88d4e115a"
+dependencies = [
+ "winapi 0.3.8",
+ "xdg",
+]
+
+[[package]]
 name = "arc-swap"
 version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -328,6 +344,8 @@ dependencies = [
 name = "manager"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
+ "app_dirs2",
  "bytes",
  "chrono",
  "hyper",
@@ -1026,3 +1044,9 @@ dependencies = [
  "winapi 0.2.8",
  "winapi-build",
 ]
+
+[[package]]
+name = "xdg"
+version = "2.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d089681aa106a86fade1b0128fb5daf07d5867a509ab036d99988dec80429a57"
