@@ -1,10 +1,15 @@
+#[macro_use]
+extern crate clap;
+
 use app_dirs2::{AppDataType, AppInfo, get_app_root};
 use std::path::PathBuf;
 
+pub mod cli;
 pub mod http_client;
 pub mod log;
 pub mod models;
 
+pub const NAMESPACE: &'static str = "cataclysm-mods";
 pub const NAME: &'static str = "cataclysm-manager";
 
 // Metadata provided by Cargo
@@ -12,8 +17,8 @@ pub const NAME: &'static str = "cataclysm-manager";
 pub const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 const DIR_CONFIG: AppInfo = AppInfo{
+    author: NAMESPACE,
     name: NAME,
-    author: "cataclysm-mods"
 };
 
 /// This const is used to give us a simple way to iterate over

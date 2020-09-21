@@ -1,29 +1,64 @@
-use manager::{http_client, log, models};
+use cataclysm_manager::{cli, http_client, log, models};
 
 use serde_json::error::Category;
 use models::github::Release;
 use tracing_attributes::instrument;
 use tracing::{debug, info, trace};
 
-// Github API endpoint for CleverRaven/Cataclysm-DDA releases
+// All CDDA releases; usually experimental
 pub static RELEASES_URI: &str = "https://api.github.com/repos/CleverRaven/Cataclysm-DDA/releases";
+// Latest non-experimental CDDA releases
+pub static STABLE_RELEASE_URI: &str = "https://api.github.com/repos/CleverRaven/Cataclysm-DDA/releases/latest";
+
 
 #[tokio::main]
 #[instrument]
 async fn main() -> anyhow::Result<()> {
     log::init().expect("Unable to initialize global log subscriber");
-    info!("Cataclysm Mod Manager {}", manager::VERSION);
+    info!("Cataclysm Mod Manager {}", cataclysm_manager::VERSION);
 
-    let config = manager::Config::default();
+    let config = cataclysm_manager::Config::default();
     debug!("{:#?}", config);
 
     config.user_cache.map(|p| debug!("User cache; exists: {}, location: {:?}", p.exists(), p));
     config.user_config.map(|p| debug!("User config; exists: {}, location: {:?}", p.exists(), p));
     config.user_data.map(|p| debug!("User data; exists: {}, location: {:?}", p.exists(), p));
 
-    let client = http_client::build_client();
-    let releases = fetch_releases(client, RELEASES_URI).await?;
+    let args = cli::parse_arguments(std::env::args().collect());
 
+    match args.subcommand() {
+        ("releases", Some(releases_args)) => {
+            match releases_args.subcommand() {
+                ("list", Some(list_args)) => {
+                    println!("List command called: {:#?}", list_args);
+
+                    let uri: &str = match list_args.value_of("RELEASE_TYPE") {
+                        Some("stable") => {
+                            println!("Stable release.");
+                            STABLE_RELEASE_URI
+                        },
+                        Some("experimental") => {
+                            println!("Experimental release.");
+                            RELEASES_URI
+                        },
+                        _ => unreachable!()
+                    };
+
+                    let client = http_client::build_client();
+                    let releases = fetch_releases(client, uri).await?;
+
+                    list_releases(releases);
+                },
+                _ => println!("Unknown subcommand called for releases: {:#?}", releases_args)
+            }
+        },
+        _ => { println!("No subcommand was entered.") }
+    }
+
+    Ok(())
+}
+
+async fn list_releases(releases: Vec<Release>) {
     for release in releases {
         trace!("{:#?}", release);
 
@@ -37,8 +72,6 @@ async fn main() -> anyhow::Result<()> {
             }
         }
     }
-
-    Ok(())
 }
 
 async fn fetch_releases(client: http_client::Client, uri: &str) -> Result<Vec<Release>, anyhow::Error> {

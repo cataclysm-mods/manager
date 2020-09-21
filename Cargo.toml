@@ -1,16 +1,19 @@
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [package]
-name = "manager"
+edition = "2018"
+name = "cataclysm_manager"
 version = "0.1.0"
 authors = ["Damien Wilson <damien@mindglob.com>"]
-edition = "2018"
+description = "A tool for managing your Cataclysm: Dark Days ahead installation."
+repository = "https://github.com/cataclysm-mods/manager"
 
 [dependencies]
 anyhow = "1.0"
 app_dirs2 = "2.0"
 bytes = { version = "0.5", features = ["serde"] }
 chrono = { version = "0.4", features = ["serde"] }
+clap = "~2.33"
 hyper = "0.13"
 hyper-tls = "0.4.1"
 serde = { version = "1.0", features = ["derive"] } 
