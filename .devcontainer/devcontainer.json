@@ -9,7 +9,7 @@
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": { 
-		"terminal.integrated.shell.linux": "/bin/bash",
+		"terminal.integrated.shell.linux": "/bin/zsh",
 		"lldb.executable": "/usr/bin/lldb",
 		// VS Code don't watch files under ./target
 		"files.watcherExclude": {
@@ -19,10 +19,11 @@
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-		"rust-lang.rust",
 		"bungcip.better-toml",
+		"matklad.rust-analyzer",
+		"mutantdino.resourcemonitor",
+		"rust-lang.rust",
 		"vadimcn.vscode-lldb",
-		"mutantdino.resourcemonitor"
 	]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
