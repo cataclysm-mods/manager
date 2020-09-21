@@ -24,7 +24,7 @@
 		"mutantdino.resourcemonitor",
 		"rust-lang.rust",
 		"vadimcn.vscode-lldb",
-	]
+	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
@@ -33,5 +33,5 @@
 	// "postCreateCommand": "rustc --version",
 
 	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
-	// "remoteUser": "vscode"
+	"remoteUser": "vscode"
 }
