@@ -5,7 +5,7 @@ pub mod http_client;
 pub mod log;
 pub mod models;
 
-pub const NAME: &'static str = "cdda-manager";
+pub const NAME: &'static str = "cataclysm-manager";
 
 // Metadata provided by Cargo
 // See: https://doc.rust-lang.org/cargo/reference/environment-variables.html#environment-variables-cargo-sets-for-crates

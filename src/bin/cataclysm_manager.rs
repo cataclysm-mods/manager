@@ -3,7 +3,7 @@ use manager::{http_client, log, models};
 use serde_json::error::Category;
 use models::github::Release;
 use tracing_attributes::instrument;
-use tracing::{debug, info};
+use tracing::{debug, info, trace};
 
 // Github API endpoint for CleverRaven/Cataclysm-DDA releases
 pub static RELEASES_URI: &str = "https://api.github.com/repos/CleverRaven/Cataclysm-DDA/releases";
@@ -25,7 +25,7 @@ async fn main() -> anyhow::Result<()> {
     let releases = fetch_releases(client).await?;
 
     for release in releases {
-        debug!("{:#?}", release);
+        trace!("{:#?}", release);
     }
 
     Ok(())
