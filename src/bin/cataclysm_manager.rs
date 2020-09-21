@@ -22,21 +22,31 @@ async fn main() -> anyhow::Result<()> {
     config.user_data.map(|p| debug!("User data; exists: {}, location: {:?}", p.exists(), p));
 
     let client = http_client::build_client();
-    let releases = fetch_releases(client).await?;
+    let releases = fetch_releases(client, RELEASES_URI).await?;
 
     for release in releases {
         trace!("{:#?}", release);
+
+        match release.assets.len() {
+            0 => { trace!("Skipping {}, no assets", release.id ) },
+            _ => {
+                println!("{}: {}", release.name, release.html_url);
+                for asset in release.assets {
+                    println!("  {} ({}): {}", asset.name, asset.size, asset.browser_download_url);
+                }
+            }
+        }
     }
 
     Ok(())
 }
 
-async fn fetch_releases(client: http_client::Client) -> Result<Vec<Release>, anyhow::Error> {
+async fn fetch_releases(client: http_client::Client, uri: &str) -> Result<Vec<Release>, anyhow::Error> {
     let req = http_client::github_request()
-        .uri(RELEASES_URI)
+        .uri(uri)
         .method("GET")
         .body(hyper::Body::empty())
-        .expect(&format!("Invalid URI in constant RELEASES_URI: {}", RELEASES_URI));
+        .expect(&format!("Invalid URI in constant RELEASES_URI: {}", uri));
 
     let resp = client.request(req).await?;
     debug!("Response: {}", resp.status());
