@@ -21,8 +21,9 @@ pub fn build_client() -> Client {
 /// 
 /// # Examples
 /// ```
+/// use manager::http_client::build_request;
 /// let mut request = build_request();
-/// assert!(request.headers().contains_key("User-Agent"));
+/// assert!(request.headers_ref().unwrap().contains_key("User-Agent"));
 /// ```
 pub fn build_request() -> hyper::http::request::Builder {
     Request::builder().header("User-Agent", "cataclysm-mods/manager")
@@ -39,8 +40,9 @@ pub fn build_request() -> hyper::http::request::Builder {
 /// 
 /// # Examples
 /// ```
-/// let mut request = build_request();
-/// assert!(request.headers().contains_key("Accept"));
+/// use manager::http_client::github_request;
+/// let mut request = github_request();
+/// assert!(request.headers_ref().unwrap().contains_key("Accept"));
 /// ```
 pub fn github_request() -> hyper::http::request::Builder {
     build_request().header("Accept", "application/vnd.github.v3+json")
