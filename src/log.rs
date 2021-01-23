@@ -3,9 +3,7 @@ use tracing_subscriber::{fmt, registry::Registry, EnvFilter};
 use tracing_subscriber::prelude::*;
 
 pub fn init() -> Result<(), SetGlobalDefaultError> {
-    let fmt_layer = fmt::Layer::builder()
-        .with_target(true)
-        .finish();
+    let fmt_layer = fmt::Layer::new().with_target(true);
 
     let filter_layer = EnvFilter::try_from_default_env()
         .or_else(|_| EnvFilter::try_new("info"))

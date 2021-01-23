@@ -11,17 +11,17 @@ repository = "https://github.com/cataclysm-mods/manager"
 [dependencies]
 anyhow = "1.0"
 app_dirs2 = "2.0"
-bytes = { version = "0.5", features = ["serde"] }
+bytes = { version = "1", features = ["serde"] }
 chrono = { version = "0.4", features = ["serde"] }
 clap = "~2.33"
-hyper = "0.13"
-hyper-tls = "0.4.1"
+hyper = { version = "0.14", features = ["full"] }
+hyper-tls = "0.5"
 serde = { version = "1.0", features = ["derive"] } 
 serde_json = "1.0"
-tokio = { version = "0.2", features = ["full"] }
+tokio = { version = "1.1", features = ["full"] }
 tracing = "0.1"
-tracing-attributes = "0.1.7"
-tracing-subscriber = "0.2.3"
+tracing-attributes = "0.1"
+tracing-subscriber = "0.2"
 
 [[bin]]
 name = "cataclysm-manager"
