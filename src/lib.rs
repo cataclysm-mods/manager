@@ -1,4 +1,3 @@
-#[macro_use]
 extern crate clap;
 
 use app_dirs2::{AppDataType, AppInfo, get_app_root};

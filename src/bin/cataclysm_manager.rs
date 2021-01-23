@@ -1,7 +1,7 @@
 use cataclysm_manager::{cli, http_client, log, models};
 
 use serde_json::error::Category;
-use models::github::Release;
+use models::github::{Asset, Release};
 use tracing_attributes::instrument;
 use tracing::{debug, info, trace};
 
@@ -30,8 +30,6 @@ async fn main() -> anyhow::Result<()> {
         ("releases", Some(releases_args)) => {
             match releases_args.subcommand() {
                 ("list", Some(list_args)) => {
-                    println!("List command called: {:#?}", list_args);
-
                     let uri: &str = match list_args.value_of("RELEASE_TYPE") {
                         Some("stable") => {
                             println!("Stable release.");
@@ -58,7 +56,7 @@ async fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-async fn list_releases(releases: Vec<Release>) {
+fn list_releases(releases: Vec<Release>) {
     for release in releases {
         trace!("{:#?}", release);
 
@@ -145,6 +143,11 @@ async fn handle_json_deserialization_failure<SerdeType>(
     match json_error.classify() {
         Category::Io | Category::Syntax | Category::Eof => json_error.into(),
         Category::Data => {
+            Ok(json)
+                .and_then(debug_release)
+                .and_then(debug_release_assets)
+                .unwrap();
+
             let line: Option<&str> = json.lines()
                 .enumerate()
                 .skip_while(|tuple| {
@@ -171,4 +174,45 @@ async fn handle_json_deserialization_failure<SerdeType>(
             }
         }
     }
+}
+
+fn debug_release_assets(json: &str) -> Result<&str, anyhow::Error> {
+    let parsed: serde_json::Value = serde_json::from_str(json).unwrap();
+    let obj = parsed.as_object().unwrap();
+    let obj_id = obj.get("id").unwrap();
+    let assets_obj = obj.get("assets").unwrap();
+    let assets = assets_obj.as_array().unwrap();
+
+    debug!("Checking {} assets for relese(id={})", assets.len(), obj_id);
+
+    for (idx, a) in assets.iter().enumerate() {
+        debug!("Checking asset[{}]", idx);
+
+        let asset_obj = a.clone();
+        let asset: std::result::Result<Asset, serde_json::Error> = serde_json::from_value(asset_obj.clone());
+
+        if let Err(e) = asset {
+            debug!("Semantically valid asset detected, asset #{}", idx);
+            debug!("Asset object: {:?}", asset_obj);
+            debug!("Serde error: {:?}", e)
+        }
+    }
+
+    debug!("All asset data for relese(id={}) is semantically correct", obj_id);
+
+    Ok(json)
+}
+
+fn debug_release(json: &str) -> Result<&str, anyhow::Error> {
+    let parsed: serde_json::Value = serde_json::from_str(json).unwrap();
+    let obj = parsed.as_object().unwrap();
+
+    for k in obj.keys() {
+        if k != "assets" {
+            let value = obj.get(k);
+            debug!("{}: {:#?}", k, value);
+        }
+    }
+
+    Ok(json)
 }
