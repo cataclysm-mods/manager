@@ -1,15 +1,17 @@
 use clap::{App, Arg, SubCommand, crate_authors, crate_version};
 use crate::NAME;
 
-/// When called, parses ARGV 
+/// When called, parses ARGV using Clap
 ///
 /// Example:
 /// ```
-/// parse_arguments(["cataclysm-manager", "--version"])
-/// assert!(
-///     error.description,
-///     "Unable to parse release data due to semantically invalid JSON data when attempting to extract Greeting at 1:12:"
-/// )
+/// use cataclysm_manager::cli::parse_arguments;
+/// let args = vec!["cataclysm-manager", "--version"];
+/// let argv = args.iter().map(|s| s.to_string()).collect();
+/// let matches = parse_arguments(argv);
+/// assert_eq!(matches.is_present("version"), true);
+/// assert_eq!(matches.occurrences_of("version"), 1);
+/// assert_eq!(matches.occurrences_of("help"), 0);
 /// ```
 pub fn parse_arguments(argv: Vec<String>) -> clap::ArgMatches<'static> {
     let app = App::new(NAME)
