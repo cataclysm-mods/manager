@@ -21,7 +21,7 @@ pub fn build_client() -> Client {
 /// 
 /// # Examples
 /// ```
-/// use manager::http_client::build_request;
+/// use cataclysm_manager::http_client::build_request;
 /// let mut request = build_request();
 /// assert!(request.headers_ref().unwrap().contains_key("User-Agent"));
 /// ```
@@ -40,7 +40,7 @@ pub fn build_request() -> hyper::http::request::Builder {
 /// 
 /// # Examples
 /// ```
-/// use manager::http_client::github_request;
+/// use cataclysm_manager::http_client::github_request;
 /// let mut request = github_request();
 /// assert!(request.headers_ref().unwrap().contains_key("Accept"));
 /// ```
